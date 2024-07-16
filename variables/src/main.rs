@@ -1,4 +1,4 @@
-use std::io;
+use std::io::{self, Read};
 
 fn main() {
     // mutability();
@@ -7,7 +7,10 @@ fn main() {
     // datatypes();
     // numeric_operations();
     // compound_types();
-    age();
+    // age();
+    // print_labeled_measurement(5, 'h');
+    // stmt_and_expr();
+    temp_conversion();
 }
 
 // mutability
@@ -97,27 +100,94 @@ fn compound_types() {
     println!("The value of y is: {y}");
 
     // array
-    let a = [1,2,3,4,5];
-    let b = [17;3];
+    let a = [1, 2, 3, 4, 5];
+    let b = [17; 3];
 
     print!("{}, {}", a[0], b[0]);
 }
 
 fn age() {
-  println!("please enter your age : ");
+    println!("please enter your age : ");
 
-  let mut age = String::new();
+    let mut age = String::new();
 
-  io::stdin()
+    io::stdin()
         .read_line(&mut age)
         .expect("Failed to read your age");
 
-  let age: u32 = age.trim()
-                .parse()
-                .expect("Age you entered was not a number");
-  if age > 18 {
-    println!("You are eligible to vote as your age is {age} and is above 18.");
-  } else {
-    print!("You are not eligible to vote as your age is {age} and is below 18");
+    let age: u32 = age
+        .trim()
+        .parse()
+        .expect("Age you entered was not a number");
+    if age > 18 {
+        println!("You are eligible to vote as your age is {age} and is above 18.");
+    } else {
+        print!("You are not eligible to vote as your age is {age} and is below 18");
+    }
+}
+
+fn print_labeled_measurement(value: i32, unit_label: char) {
+    println!("The measurement is: {value}{unit_label}");
+}
+
+fn stmt_and_expr() {
+    let y = {
+        let x = 3;
+        x + 1
+    };
+
+    println!("The value of y is: {y}");
+}
+
+fn temp_conversion() {
+  println!("Enter from temperature units: C, F, K");
+  let mut from_units = String::new();
+  let mut from_temp = String::new();
+  let temp_1: f32;
+  let temp_2: f32;
+  
+
+  io::stdin()
+    .read_line(&mut from_units)
+    .expect("unable to read the input units");
+
+  let from_unit = from_units.chars().nth(0);
+
+  match from_unit {
+    Some(c) => {
+      if c.to_ascii_lowercase() == 'c' || c.to_ascii_lowercase() == 'f' || c.to_ascii_lowercase() == 'k' {
+        println!("Enter the temp: ");
+        io::stdin()
+          .read_line(&mut from_temp)
+          .expect("Please Enter valid temp!");
+        let from_temp: f32 = from_temp
+                      .trim()
+                      .parse()
+                      .expect("temperature could not be parsed");
+        println!("{c}, {from_temp}");
+
+        if c.to_ascii_lowercase() == 'c' {
+          temp_1 = (from_temp * 9.0/5.0) + 32.0;
+          temp_2 = from_temp + 273.15;
+          println!("Temperature in f: {temp_1}");
+          println!("Temperature in k: {temp_2}");
+        } else if c.to_ascii_lowercase() == 'f' {
+          temp_1 = (from_temp - 32.0) * 5.0/9.0;
+          temp_2 = (from_temp - 32.0) * 5.0/9.0 + 273.15;
+          println!("Temperature in c: {temp_1}");
+          println!("Temperature in k: {temp_2}");
+        } else {
+          temp_1 = (from_temp - 273.15);
+          temp_2 = (from_temp - 273.15) * 9.0/5.0 + 32.0;
+          println!("Temperature in c: {temp_1}");
+          println!("Temperature in f: {temp_2}");
+        }
+
+      } else {
+        println!("not a correct unit for temp")
+      }
+    },
+    None => println!("This should not have been called!")
   }
+
 }
